@@ -1,6 +1,6 @@
 'use strict'
 
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow , ipcMain } = require('electron')
 
 
 app.on('ready', () => {
@@ -15,7 +15,7 @@ app.on('ready', () => {
     win = null
   })
 
-  win.loadURL(`http://localhost:8080/`)
+  win.loadURL(`http://localhost:8080`)
   win.once('ready-to-show', () => {
     win.show()
   })
@@ -27,4 +27,9 @@ app.on('before-quit', () => {
 
 app.on('window-all-closed', () => {
   app.quit()
+})
+
+ipcMain.on('ping', (event, arg) =>{
+  console.log(`Se recibió ping con el contenido: ${arg}`)
+  event.sender.send('pong', new Date())
 })

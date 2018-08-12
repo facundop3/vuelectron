@@ -2,14 +2,20 @@
   <v-app dark>
     <v-navigation-drawer
       persistent
+      :right="right"
       :mini-variant="miniVariant"
       :clipped="clipped"
-      v-model="drawer"
-      enable-resize-watcher
+      v-model="rightDrawer"
       fixed
       app
     >
       <v-list>
+          <v-list-tile @click="right = !right">
+            <v-list-tile-action>
+              <v-icon>compare_arrows</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
+          </v-list-tile>
         <v-list-tile
           value="true"
           @click="showSocialNetwork(socialNetworkObj.title)"
@@ -47,27 +53,10 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <!-- <router-view/> -->
       <template v-for="(socialNetwork, i) in socialNetworksObjects">
         <webview v-show="(isClicked === socialNetwork.title)" :id="socialNetwork.title" :key="i" :src="socialNetwork.url" v-if="socialNetwork.url" style="display:inline-flex; width:100%; height:100%"></webview>
       </template>
     </v-content>
-    <v-navigation-drawer
-      temporary
-      :right="right"
-      v-model="rightDrawer"
-      fixed
-      app
-    >
-      <v-list>
-        <v-list-tile @click="right = !right">
-          <v-list-tile-action>
-            <v-icon>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
       <span>&copy; 2018</span>
     </v-footer>
@@ -76,7 +65,9 @@
 
 <script>
 import HelloWorld from './components/HelloWorld'
-
+import SocialNetworkJson from './assets/SocialNetworks.json'
+// import { setIPC, sendIPC} from './IPCrenderer'
+// require('devtron').install()
 export default {
   name: 'App',
   components: {
@@ -87,46 +78,10 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-      socialNetworksObjects: [
-        {
-          icon: 'fab fa-whatsapp',
-          title: 'WhatsApp',
-          url: 'https://web.whatsapp.com',
-        },
-        {
-          icon: 'fab fa-instagram',
-          title: 'Instagram',
-          url: 'https://www.instagram.com/',
-        },
-        {
-          icon: 'fab fa-twitter',
-          title: 'Twitter',
-          url: 'https://twitter.com/',
-        },
-        {
-          icon: 'fab fa-telegram',
-          title: 'Telegram',
-          url: 'https://web.telegram.org/'
-        },
-        {
-          icon: 'fab fa-facebook-f',
-          title: 'Facebook',
-          url: 'https://www.facebook.com/',
-        },
-        {
-          icon: 'far fa-envelope',
-          title: 'Gmail',
-          url: 'https://mail.google.com/',
-        },
-        {
-          icon: 'fa-plus-square',
-          title: 'Add new',
-          url: ''
-        }
-      ],
+      socialNetworksObjects: SocialNetworkJson['SocialNetworksList'],
       clickedSocialNetwork: '',
       miniVariant: false,
-      right: true,
+      right: false,
       rightDrawer: false,
       title: '👻'
     }
@@ -134,10 +89,13 @@ export default {
   methods: {
     showSocialNetwork(socialNetworkName){
       this.clickedSocialNetwork = socialNetworkName
-    }
+    },
+    // sendIPC,
+    // setIPC
   },
   created() {
     this.clickedSocialNetwork = this.socialNetworksObjects[0].title
+    // setIPC()
   },
   computed: {
     isClicked () {

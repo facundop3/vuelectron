@@ -1,0 +1,49 @@
+{
+  "SocialNetworksList":[
+    {
+      "icon": "fab fa-whatsapp",
+      "title": "WhatsApp",
+      "url": "https://web.whatsapp.com"
+    },
+    {
+      "icon": "fab fa-instagram",
+      "title": "Instagram",
+      "url": "https://www.instagram.com/"
+    },
+    {
+      "icon": "fab fa-twitter",
+      "title": "Twitter",
+      "url": "https://twitter.com/"
+    },
+    {
+      "icon": "fab fa-telegram",
+      "title": "Telegram",
+      "url": "https://web.telegram.org/"
+    },
+    {
+      "icon": "fab fa-facebook-f",
+      "title": "Facebook",
+      "url": "https://www.facebook.com/"
+    },
+    {
+      "icon": "far fa-envelope",
+      "title": "Gmail",
+      "url": "https://mail.google.com/"
+    },
+    {
+      "icon": "fab fa-youtube",
+      "title": "YouTube",
+      "url": "https://www.youtube.com/"
+    },
+    {
+      "icon": "fas fa-fire",
+      "title": "Tinder",
+      "url": "https://tinder.com/"
+    },
+    {
+      "icon": "fa-plus-square",
+      "title": "Add new",
+      "url": ""
+    }
+  ]
+}
