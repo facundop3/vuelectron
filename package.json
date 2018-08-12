@@ -1,0 +1,22 @@
+{
+  "name": "platzipics",
+  "version": "1.0.0",
+  "description": "Playing with electron",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "dev": "electron src/index.js"
+  },
+  "author": "Facundo Petre @facup3",
+  "license": "MIT",
+  "devDependencies": {
+    "devtron": "^1.4.0",
+    "electron": "^2.0.7",
+    "standard": "^11.0.1"
+  },
+  "dependencies": {
+    "vue": "^2.5.17"
+  }
+}
