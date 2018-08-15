@@ -1,7 +1,13 @@
 'use strict'
 
-const { app, BrowserWindow , ipcMain } = require('electron')
+const { app, BrowserWindow } = require('electron')
 
+let url
+if (process.env.NODE_ENV === 'DEV') {
+  url = 'http://localhost:8080/'
+} else {
+  url = `file://${process.cwd()}/dist/index.html`
+}
 
 app.on('ready', () => {
   let windowOptions = {
@@ -10,14 +16,23 @@ app.on('ready', () => {
     'show': false,
     'titleBarStyle': 'hidden'
   }
+  let loader = new BrowserWindow({
+    "center": true,
+    "frame": false,
+    "width":180,
+    "height":180
+  })
+  loader.loadURL(`file://${__dirname}/loader.html`)
   let win = new BrowserWindow(windowOptions)
   win.on('close', () => {
     win = null
   })
 
-  win.loadURL(`http://localhost:8080`)
+  win.loadURL(url)
   win.once('ready-to-show', () => {
     win.show()
+    loader.close()
+    loader = null
   })
 })
 
@@ -28,8 +43,14 @@ app.on('before-quit', () => {
 app.on('window-all-closed', () => {
   app.quit()
 })
+// In main process.
+const {ipcMain} = require('electron')
+ipcMain.on('asynchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.sender.send('asynchronous-reply', 'pong')
+})
 
-ipcMain.on('ping', (event, arg) =>{
-  console.log(`Se recibió ping con el contenido: ${arg}`)
-  event.sender.send('pong', new Date())
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.returnValue = 'pong'
 })

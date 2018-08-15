@@ -39,11 +39,6 @@
       "icon": "fas fa-fire",
       "title": "Tinder",
       "url": "https://tinder.com/"
-    },
-    {
-      "icon": "fa-plus-square",
-      "title": "Add new",
-      "url": ""
     }
   ]
 }

@@ -29,6 +29,17 @@
             <v-list-tile-title v-text="socialNetworkObj.title" class="white-color"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <add-new-dialog ref="addNewDialog"/>
+        <v-list-tile
+          value="true"
+          @click="showAddNewDialog">
+          <v-list-tile-action>
+            <v-icon color="white">fa-plus-square</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="white-color">Add new</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -65,13 +76,14 @@
 
 <script>
 import HelloWorld from './components/HelloWorld'
+import AddNewDialog from './components/AddNewDialog'
 import SocialNetworkJson from './assets/SocialNetworks.json'
-// import { setIPC, sendIPC} from './IPCrenderer'
 // require('devtron').install()
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    AddNewDialog
   },
   data () {
     return {
@@ -90,12 +102,12 @@ export default {
     showSocialNetwork(socialNetworkName){
       this.clickedSocialNetwork = socialNetworkName
     },
-    // sendIPC,
-    // setIPC
+    showAddNewDialog(){
+      this.$refs.addNewDialog.switchDialog()
+    }
   },
-  created() {
-    this.clickedSocialNetwork = this.socialNetworksObjects[0].title
-    // setIPC()
+  mounted() {
+    // Use window.require to require electrons stuff on vue's components -> https://github.com/parcel-bundler/parcel/issues/1244
   },
   computed: {
     isClicked () {

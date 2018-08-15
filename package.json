@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron": "electron src/electron/index.js"
+    "dev": "NODE_ENV=DEV vue-cli-service serve & sleep 5 && NODE_ENV=DEV electron ./src/electron"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
