@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app dark :class="{'blur': applyBlur}">
     <v-navigation-drawer
       persistent
       :right="right"
@@ -19,6 +19,7 @@
         <v-list-tile
           value="true"
           @click="showSocialNetwork(socialNetworkObj.title)"
+          @mouseover="visibleTrash = true" @mouseleave="visibleTrash = false"
           v-for="(socialNetworkObj, i) in socialNetworksObjects"
           :key="i"
         >
@@ -28,8 +29,11 @@
           <v-list-tile-content>
             <v-list-tile-title v-text="socialNetworkObj.title" class="white-color"></v-list-tile-title>
           </v-list-tile-content>
+          <v-list-tile-action @click="removeSocialNetwork(socialNetworkObj.title)" v-show="visibleTrash" top>
+            <v-icon color="white" size="15">far fa-trash-alt</v-icon>
+          </v-list-tile-action>
         </v-list-tile>
-        <add-new-dialog ref="addNewDialog"/>
+        <add-new-dialog ref="addNewDialog" @addNew="saveNew"/>
         <v-list-tile
           value="true"
           @click="showAddNewDialog">
@@ -67,6 +71,7 @@
       <template v-for="(socialNetwork, i) in socialNetworksObjects">
         <webview v-show="(isClicked === socialNetwork.title)" :id="socialNetwork.title" :key="i" :src="socialNetwork.url" v-if="socialNetwork.url" style="display:inline-flex; width:100%; height:100%"></webview>
       </template>
+      <notification ref="myNotification"/>
     </v-content>
     <v-footer :fixed="fixed" app>
       <span>&copy; 2018</span>
@@ -78,12 +83,16 @@
 import HelloWorld from './components/HelloWorld'
 import AddNewDialog from './components/AddNewDialog'
 import SocialNetworkJson from './assets/SocialNetworks.json'
+import Notification from './components/Notification.vue'
+import { setTimeout } from 'timers';
+
 // require('devtron').install()
 export default {
   name: 'App',
   components: {
     HelloWorld,
-    AddNewDialog
+    AddNewDialog,
+    Notification
   },
   data () {
     return {
@@ -95,7 +104,11 @@ export default {
       miniVariant: false,
       right: false,
       rightDrawer: false,
-      title: '👻'
+      title: '👻',
+      visibleTrash: false,
+      applyBlur: false,
+      fs: window.require('fs'),
+      globalShortcut  : window.require('electron')
     }
   },
   methods: {
@@ -104,9 +117,72 @@ export default {
     },
     showAddNewDialog(){
       this.$refs.addNewDialog.switchDialog()
+    },
+    getSocialNetworks(){
+      this.fs.readFile(`src/assets/SocialNetworks.json`, 'utf-8', (err, data) =>{
+        if (err) {
+          console.log(err.message)
+          return
+        } 
+        return data
+      })
+    },
+    saveNew (dataToAdd) {
+      this.fs.readFile(`src/assets/SocialNetworks.json`, 'utf-8', (err, data) =>{
+        if (err) {
+          console.log(err.message)
+          return
+        } 
+        let dataObj = JSON.parse(data)
+        dataObj.SocialNetworksList.push(dataToAdd)
+        let dataStr = JSON.stringify(dataObj)
+        let filepath = `src/assets/SocialNetworks.json`
+        this.fs.writeFile(filepath, dataStr, (err) => {
+        if (err) {
+              alert("An error ocurred updating the file" + err.message)
+              console.log(err)
+              return
+          }
+
+          this.showNotification(`${dataToAdd.title} added successfully`, 'success')
+        })
+      })
+    },
+    showNotification(message){
+      this.$refs.myNotification.showNotification(message)
+    },
+    removeSocialNetwork(title){
+      console.log(title)
+      let filepath = `src/assets/SocialNetworks.json`
+      this.fs.readFile(filepath, 'utf-8', (err, data) =>{
+        if (err) {
+          console.log(err.message)
+          return
+        } 
+        let dataObj = JSON.parse(data)
+        dataObj.SocialNetworksList = dataObj.SocialNetworksList.filter(x=> x.title!=title)
+        let dataStr = JSON.stringify(dataObj)
+        this.fs.writeFile(filepath, dataStr, (err) => {
+        if (err) {
+              alert("An error ocurred updating the file" + err.message)
+              console.log(err)
+              return
+          }
+
+          this.showNotification(`${dataToAdd.title} deleted successfully`, 'success')
+        })
+      })
     }
+
   },
   mounted() {
+    // const { globalShortcut } = window.require('electron')
+
+    this.globalShortcut.register('CommandOrControl+X', () => {
+      console.log('CommandOrControl+X is pressed')
+      this.applyBlur = ! this.applyBlur
+    })
+
     // Use window.require to require electrons stuff on vue's components -> https://github.com/parcel-bundler/parcel/issues/1244
   },
   computed: {
@@ -122,5 +198,8 @@ export default {
   }
   a{
     text-decoration: none;
+  }
+  .blur{
+    filter: blur(7px);
   }
 </style>
