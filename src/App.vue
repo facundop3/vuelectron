@@ -73,7 +73,7 @@
       </template>
       <notification ref="myNotification"/>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer :fixed="fixed" app style="-webkit-app-region: drag">
       <span>&copy; 2018</span>
     </v-footer>
   </v-app>
